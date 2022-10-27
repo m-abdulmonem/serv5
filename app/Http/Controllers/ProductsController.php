@@ -37,7 +37,11 @@ class ProductsController extends Controller
         $query = DB::table('dummy')->orderBy('id', 'DESC')->limit(5);
 
         if ($keyword = $request->search) {
+<<<<<<< HEAD
             $query = $query->orWhere("product", "like", "%$keyword%")->orWhere("brand", "like", "%$keyword%")->orWhere("category", "like", "%$keyword%")->get();
+=======
+            $query = $query->orWhere("product", "like", "%$keyword%")->orWhere("brand", "like", "%$keyword%")->orWhere("category", "like", "%$keyword%");
+>>>>>>> d923f26 (fix search with selectboxes)
         }
 
 //         if (($filter = $request->filter)) {
