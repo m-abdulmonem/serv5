@@ -40,9 +40,9 @@ class ProductsController extends Controller
             $query = $query->orWhere("product", "like", "%$keyword%")->orWhere("brand", "like", "%$keyword%")->orWhere("category", "like", "%$keyword%")->get();
         }
 
-        if (($filter = $request->filter)) {
-            $query = $query->orWhereIn("brand", $filter)->orWhereIn("category", $filter);
-        }
+//         if (($filter = $request->filter)) {
+            $query = $query->orWhereIn("brand",$request->filter)->orWhereIn("category", $request->filter);
+//         }
 
         if ($request->id > 0) {
             return $query->where('id', '<', $request->id)->get();
