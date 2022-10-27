@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -11,6 +12,34 @@ class ProductsController extends Controller
 
     function index(Request $request)
     {
+
+
+
+        $cats = Category::with('parent', 'categories')->get();
+
+        dd($cats);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         \abort_if(!$request->ajax(), 404);
 
         $output = '';
@@ -37,11 +66,7 @@ class ProductsController extends Controller
         $query = DB::table('dummy')->orderBy('id', 'DESC')->limit(5);
 
         if ($keyword = $request->search) {
-<<<<<<< HEAD
-            $query = $query->orWhere("product", "like", "%$keyword%")->orWhere("brand", "like", "%$keyword%")->orWhere("category", "like", "%$keyword%")->get();
-=======
             $query = $query->orWhere("product", "like", "%$keyword%")->orWhere("brand", "like", "%$keyword%")->orWhere("category", "like", "%$keyword%");
->>>>>>> d923f26 (fix search with selectboxes)
         }
 
 //         if (($filter = $request->filter)) {
