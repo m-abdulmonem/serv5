@@ -142,8 +142,8 @@
                 });
 
                 $('.products').empty()
-                
-                load_data('', l);
+
+                load_data('', l,$("#search").val());
             })
 
             $("#search").keyup(function() {
