@@ -30,9 +30,60 @@
         return "$html </li>";
     }
 
-    // foreach ($cats as $cat) {
-    //     $htmlG .= tree($cat);
-    // }
+    function flatten(array $array)
+    {
+        $return = [];
+        array_walk_recursive($array, function ($a) use (&$return) {
+            $return[] = $a;
+        });
+        return $return;
+    }
+
+    function tree1($cats, $child = false)
+    {
+        $var = [];
+
+        if ($cats->children->count() > 0) {
+            foreach ($cats->children as $cat) {
+                $var[$cats->id][$cat->id] = $cat->Ads->count() > 0 ? $cat->name : null;
+
+                // if (array_key_exists($cats->id, $var) && array_key_exists($cat->id, $var) && empty(($a = $var[$cats->id])) || $var[$cats->id][$cat->id] == null || $var[$cats->id][$cat->id] == [] || empty(($var[$cats->id][$cats->id]) ||empty($var[$cat->id][$cat->id])) ) {
+                //     unset($var[$cats->id][$cat->id]);
+                // }
+
+                if ($cat->children->count() > 0) {
+                    // if (array_key_exists($cats->id, $var) && array_key_exists($cat->id, $var)) {
+                        $var[$cats->id][$cat->id] = tree1($cat, true, $var);
+                    // }
+                }
+            }
+        }
+        return $var;
+    }
+    $f = [];
+    foreach ($cats as $cat) {
+        $f[] = tree1($cat, false);
+    }
+
+    dd($f);
+    function re($value)
+    {
+        $var = [];
+        foreach ($value as $key => $item) {
+            if (array_key_exists($key,$item)) {
+                $var[$key] = $item[$key];
+            }
+        }
+        return $var;
+    }
+    $ff= [];
+    foreach ($f as $key => $value) {
+       if(array_key_exists($key,$value)){
+        $ff[] = re($value);
+       }
+    }
+
+    dd($ff);
 
     // return  "$htmlG";
 
@@ -62,16 +113,42 @@
 <body>
 
     <div class="container">
+        <ul id="tree1">
+
+            @foreach ($cats as $category)
+                <li>
+
+                    {{ $category->name }}
+
+                    @if (count($category->children))
+                        {!! tree($category) !!}
+                        {{-- @include('manageChild', ['childs' => $category->children]) --}}
+                    @endif
+
+                </li>
+            @endforeach
+
+        </ul>
+    </div>
+
+
+    <div class="container">
 
         <div class="dropdown">
-            @foreach ($cats as $cat)
-                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Tutorials
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
+            @foreach ($cats as $key => $cat)
+                @if (count($cat->children))
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                        {{ $cat->name }}
+                        <span class="caret"></span>
+                    </button>
 
-                    {!! tree($cat, true) !!}
-                    {{--
+                    <ul class="dropdown-menu">
+                        <li>
+                            @include('manageChild', ['childs' => $cat->children, 'isFirst' => true])
+                        </li>
+
+                        {{-- {!! tree($cat, true) !!} --}}
+                        {{--
                     <li><a tabindex="-1" href="#">HTML</a></li>
                     <li><a tabindex="-1" href="#">CSS</a></li>
                     <li class="dropdown-submenu">
@@ -89,7 +166,12 @@
                         </ul>
                     </li> --}}
 
-                </ul>
+                    </ul>
+                @elseif (count($cat->Ads))
+                    <button class="btn btn-default ">
+                        {{ $cat->name }}
+                    </button>
+                @endif
             @endforeach
         </div>
     </div>
